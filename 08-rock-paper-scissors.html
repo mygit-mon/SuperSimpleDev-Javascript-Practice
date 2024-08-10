@@ -35,7 +35,25 @@
       Scissors
     </button>
 
+    <button
+      onclick="
+        score.wins = 0;
+        score.loses = 0;
+        score.ties = 0;
+
+        localStorage.removeItem('score');
+    "
+    >
+      Reset Score
+    </button>
+
     <script>
+      let score = JSON.parse(localStorage.getItem('score')) || {
+        wins: 0,
+        loses: 0,
+        ties: 0,
+      };
+
       function playGame(playerMove) {
         const computerMove = pickComputerMove();
 
@@ -44,18 +62,18 @@
         if (playerMove === 'scissors') {
           if (computerMove === 'rock') {
             result = 'You lose!';
-          } else if (computerMove === ' paper') {
+          } else if (computerMove === 'paper') {
             result = 'You win!';
-          } else if (computerMove === ' scissors') {
-            result = 'Tied';
+          } else if (computerMove === 'scissors') {
+            result = 'Tie';
           }
         } else if (playerMove === 'paper') {
           if (computerMove === 'rock') {
             result = 'You win!';
-          } else if (computerMove === ' paper') {
-            result = 'Tied!';
-          } else if (computerMove === ' scissors') {
-            result = 'Win';
+          } else if (computerMove === 'paper') {
+            result = 'Tie!';
+          } else if (computerMove === 'scissors') {
+            result = 'You lose!';
           }
         } else if (playerMove === 'rock') {
           if (computerMove === 'rock') {
@@ -67,10 +85,18 @@
           }
         }
 
-        localStorage.setItem('message', 'hello');
+        if (result === 'You win!') {
+          score.wins++;
+        } else if (result === 'You lose!') {
+          score.loses++;
+        } else if (result === 'Tie') {
+          score.ties++;
+        }
+
+        localStorage.setItem('score', JSON.stringify(score));
 
         alert(
-          `You picked ${playerMove} . Computer picked ${computerMove}. ${result}`
+          `You picked ${playerMove} . Computer picked ${computerMove}. ${result} \n Win: ${score.wins} Loses: ${score.loses} Ties: ${score.ties}`
         );
       }
 
